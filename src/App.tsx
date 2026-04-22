@@ -188,12 +188,6 @@ export default function AIOrderConfirmationLanding() {
     "Rezultatul este salvat instant",
   ];
 
-  const benefits = [
-    "Reduci timpul pierdut de operatori",
-    "Scazi comenzile false sau neconfirmate",
-    "Crești viteza de procesare a comenzilor",
-    "Poți personaliza mesajul pentru fiecare magazin",
-  ];
 
   const pricing: PricingPlan[] = [
     {
