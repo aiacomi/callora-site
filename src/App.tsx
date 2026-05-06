@@ -25,8 +25,7 @@ type PricingPlan = {
   featured: boolean;
 };
 
-const YOUTUBE_EMBED = "https://www.youtube-nocookie.com/embed/hYGILZXCRqY?rel=0";
-const YOUTUBE_EMBED_AUTOPLAY = "https://www.youtube-nocookie.com/embed/hYGILZXCRqY?autoplay=1&rel=0";
+const DEMO_VIDEO_SRC = "/callora.mp4";
 const WEB3FORMS_ACCESS_KEY = "7b7fb09b-a7c3-4d3d-ac38-824d16ba823c";
 
 export default function AIOrderConfirmationLanding() {
@@ -369,14 +368,15 @@ export default function AIOrderConfirmationLanding() {
 
               <div className={`mt-6 rounded-3xl border p-3 ${themeClasses.mutedCard}`}>
                 <div className="aspect-video overflow-hidden rounded-3xl border border-white/10 bg-slate-950/60">
-                  <iframe
+                  <video
                     className="h-full w-full"
-                    src={YOUTUBE_EMBED}
-                    title="Demo video Callora AI"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
+                    controls
+                    preload="metadata"
+                    playsInline
+                  >
+                    <source src={DEMO_VIDEO_SRC} type="video/mp4" />
+                    Browserul tău nu suportă redarea video.
+                  </video>
                 </div>
               </div>
             </div>
@@ -589,14 +589,16 @@ export default function AIOrderConfirmationLanding() {
             </div>
 
             <div className="aspect-video overflow-hidden rounded-3xl border border-white/10 bg-slate-950/60">
-              <iframe
+              <video
                 className="h-full w-full"
-                src={YOUTUBE_EMBED_AUTOPLAY}
-                title="Demo video Callora AI modal"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
+                controls
+                autoPlay
+                preload="metadata"
+                playsInline
+              >
+                <source src={DEMO_VIDEO_SRC} type="video/mp4" />
+                Browserul tău nu suportă redarea video.
+              </video>
             </div>
           </div>
         </div>
