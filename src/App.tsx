@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent, type ComponentType } from "react";
 import { Moon, Sun, PhoneCall, Bot, CheckCircle2, BarChart3, Store, ShieldCheck } from "lucide-react";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 type Theme = "light" | "dark";
 
@@ -27,6 +28,7 @@ type PricingPlan = {
 
 const DEMO_VIDEO_SRC = "/callora.mp4";
 const WEB3FORMS_ACCESS_KEY = "7b7fb09b-a7c3-4d3d-ac38-824d16ba823c";
+const HCAPTCHA_SITE_KEY = "50b2fe65-b00b-4b9e-ad62-3ba471098be2";
 
 export default function AIOrderConfirmationLanding() {
   const [formData, setFormData] = useState<FormData>({
@@ -40,12 +42,26 @@ export default function AIOrderConfirmationLanding() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaKey, setCaptchaKey] = useState(0);
 
   const handleInputChange =
     (field: keyof FormData) =>
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setFormData((prev) => ({ ...prev, [field]: event.target.value }));
     };
+
+  const handleCaptchaVerify = (token: string) => {
+    setCaptchaToken(token);
+    if (statusMessage === "Te rog completează verificarea captcha.") {
+      setStatusMessage("");
+    }
+  };
+
+  const resetCaptcha = () => {
+    setCaptchaToken("");
+    setCaptchaKey((prev) => prev + 1);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,6 +76,11 @@ export default function AIOrderConfirmationLanding() {
 
     if (!trimmedData.name || !trimmedData.company || !trimmedData.email || !trimmedData.phone || !trimmedData.message) {
       setStatusMessage("Completează toate câmpurile înainte să trimiți cererea.");
+      return;
+    }
+
+    if (!captchaToken) {
+      setStatusMessage("Te rog completează verificarea captcha.");
       return;
     }
 
@@ -83,6 +104,7 @@ export default function AIOrderConfirmationLanding() {
           phone: trimmedData.phone,
           message: trimmedData.message,
           botcheck: "",
+          "h-captcha-response": captchaToken,
         }),
       });
 
@@ -100,9 +122,11 @@ export default function AIOrderConfirmationLanding() {
         phone: "",
         message: "",
       });
+      resetCaptcha();
     } catch (error) {
       const message = error instanceof Error ? error.message : "A apărut o eroare la trimiterea cererii.";
       setStatusMessage(`Cererea nu a putut fi trimisă. ${message}`);
+      resetCaptcha();
     } finally {
       setIsSubmitting(false);
     }
@@ -186,7 +210,6 @@ export default function AIOrderConfirmationLanding() {
     "Clientul spune confirm comanda sau anulez comanda",
     "Rezultatul este salvat instant",
   ];
-
 
   const pricing: PricingPlan[] = [
     {
@@ -479,8 +502,8 @@ export default function AIOrderConfirmationLanding() {
             </p>
             <div className="mt-8 space-y-4">
               <div>
-                <a href="mailto:callora.ai@outlook.com" className={`text-sm font-medium ${themeClasses.textMuted}`}>
-                  Sau scrie direct: callora.ai@outlook.com
+                <a href="mailto:calloracontact@gmail.com" className={`text-sm font-medium ${themeClasses.textMuted}`}>
+                  Sau scrie direct: calloracontact@gmail.com
                 </a>
               </div>
               <div>
@@ -532,6 +555,14 @@ export default function AIOrderConfirmationLanding() {
               onChange={handleInputChange("message")}
               className={`mt-4 w-full rounded-2xl border px-4 py-3 outline-none transition focus:ring-2 focus:ring-slate-400 ${themeClasses.input}`}
             />
+            <div className="mt-4">
+              <HCaptcha
+                key={captchaKey}
+                sitekey={HCAPTCHA_SITE_KEY}
+                reCaptchaCompat={false}
+                onVerify={handleCaptchaVerify}
+              />
+            </div>
             <div className="mt-4 flex flex-wrap gap-3">
               <button
                 type="submit"
@@ -564,7 +595,7 @@ export default function AIOrderConfirmationLanding() {
             </div>
           </div>
           <div className={`flex flex-col gap-2 lg:items-end ${themeClasses.textMuted}`}>
-            <a href="mailto:callora.ai@outlook.com">callora.ai@outlook.com</a>
+            <a href="mailto:calloracontact@gmail.com">calloracontact@gmail.com</a>
             <a href="tel:+40748303977">+40 748 303 977</a>
             <p>© 2026 Callora AI. Toate drepturile rezervate.</p>
           </div>
